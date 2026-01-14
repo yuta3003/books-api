@@ -1,84 +1,55 @@
 """
-api.db モジュール
+api.models.model モジュール
 
 このモジュールは SQLAlchemy を使用してデータベースモデルを定義します。
 以下は含まれるクラスの簡単な説明です:
 
-- User: ユーザー情報を表すデータベーステーブルのモデルクラス。
-- Post: 投稿情報を表すデータベーステーブルのモデルクラス。
-- Comment: コメント情報を表すデータベーステーブルのモデルクラス。
+- Author: 著者情報を表すデータベーステーブルのモデルクラス。
+- Book: 書籍情報を表すデータベーステーブルのモデルクラス。
 
 これらのクラスはデータベース内の異なるテーブルを表し、それぞれのテーブルに対する関連性も定義されています。
 """
-from sqlalchemy import Column, ForeignKey, Integer, String
+import uuid
+from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.orm import relationship
 
 from api.db import Base
 
 
-class User(Base):
+class Author(Base):
     """
-    ユーザー情報を表すデータベーステーブルのモデルクラスです。
+    著者情報を表すデータベーステーブルのモデルクラスです。
 
     Attributes:
-        user_id (int): ユーザーの一意の識別子。
-        user_name (str): ユーザーの名前。
-        password_hash (str): ユーザーのパスワードのハッシュ値。
-        post (relationship): ユーザーが作成した投稿との関連性。
-        comment (relationship): ユーザーが作成したコメントとの関連性。
+        id (str): 著者の一意の識別子 (UUID)。
+        name (str): 著者名 (最大50文字)。
+        books (relationship): 著者が執筆した書籍との関連性。
     """
 
-    __tablename__ = "users"
+    __tablename__ = "authors"
 
-    user_id = Column(Integer, autoincrement=True, primary_key=True)
-    user_name = Column(String(256), nullable=False, unique=True)
-    password_hash = Column(String(256), nullable=False)
+    id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String(50), nullable=False)
 
-    post = relationship("Post", back_populates="user", cascade="delete")
-    comment = relationship("Comment", back_populates="user", cascade="delete")
+    books = relationship("Book", back_populates="author", cascade="delete")
 
 
-class Post(Base):
+class Book(Base):
     """
-    投稿情報を表すデータベーステーブルのモデルクラスです。
+    書籍情報を表すデータベーステーブルのモデルクラスです。
 
     Attributes:
-        post_id (int): 投稿の一意の識別子。
-        user_id (int): 投稿を作成したユーザーの識別子。
-        contents (str): 投稿の内容。
-        user (relationship): 投稿を作成したユーザーとの関連性。
-        comment (relationship): 投稿に対するコメントとの関連性。
+        id (str): 書籍の一意の識別子 (UUID)。
+        title (str): 書籍タイトル (最大100文字)。
+        author_id (str): 著者の識別子 (UUID)。
+        author (relationship): 書籍の著者との関連性。
     """
 
-    __tablename__ = "posts"
+    __tablename__ = "books"
 
-    post_id = Column(Integer, autoincrement=True, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.user_id"))
-    contents = Column(String(256))
+    id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    title = Column(String(100), nullable=False)
+    author_id = Column(CHAR(36), ForeignKey("authors.id"), nullable=False)
 
-    user = relationship("User", back_populates="post")
-    comment = relationship("Comment", back_populates="post", cascade="delete")
-
-
-class Comment(Base):
-    """
-    コメント情報を表すデータベーステーブルのモデルクラスです。
-
-    Attributes:
-        comment_id (int): コメントの一意の識別子。
-        user_id (int): コメントを作成したユーザーの識別子。
-        post_id (int): コメントが対象とする投稿の識別子。
-        contents (str): コメントの内容。
-        user (relationship): コメントを作成したユーザーとの関連性。
-        post (relationship): コメントが対象とする投稿との関連性。
-    """
-
-    __tablename__ = "comments"
-
-    comment_id = Column(Integer, autoincrement=True, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.user_id"))
-    post_id = Column(Integer, ForeignKey("posts.post_id"))
-    contents = Column(String(256))
-
-    user = relationship("User", back_populates="comment")
-    post = relationship("Post", back_populates="comment")
+    author = relationship("Author", back_populates="books")

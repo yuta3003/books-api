@@ -11,7 +11,7 @@ services:
 
   db:
     image: mysql:8.0
-    platform: linux/x86_64  # M1 Macの場合必要
+    platform: linux/arm64/v8
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'  # rootアカウントをパスワードなしで作成
       MYSQL_DATABASE: 'prod'  # 初期データベースとしてprodを設定
@@ -19,11 +19,6 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password  # MySQL8.0ではデフォルトが"caching_sha2_password"で、ドライバが非対応のため変更
-    ports:
-      - 3306:3306  # ホストマシンのポート33306を、docker内のポート3306に接続する
-    networks:
-      backend:
-        ipv4_address: 192.168.20.103
 
 volumes:
   mysql_data:
