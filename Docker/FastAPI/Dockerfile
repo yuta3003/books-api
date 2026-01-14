@@ -10,6 +10,6 @@ RUN poetry config virtualenvs.in-project false
 
 COPY ./FastAPI/pyproject.toml ./pyproject.toml
 COPY ./FastAPI/poetry.lock ./poetry.lock
-RUN poetry install --no-root
+RUN poetry install --no-root --with dev
 
 ENTRYPOINT ["poetry", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

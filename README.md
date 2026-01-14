@@ -1,25 +1,29 @@
-# テーブル定義
+# Backend API
 
-```mermaid
-erDiagram
-  users {
-    int user_id PK
-    string user_name "ユーザー名"
-	  string password_hash "パスワードハッシュ"
-  }
+FastAPI + MySQL を使ったシンプルな書籍/著者管理 API です。
 
-  posts {
-    int post_id PK
-    string thumbnail_path "サムネイルPath"
-    string title
-    stirng content
-  }
+## 構成
+
+- API: FastAPI
+- DB: MySQL 8
+- 起動: Docker Compose
+
+## 起動方法
 
 ```
-
-# ER図
-
-```mermaid
-erDiagram
-  users ||--o{ posts : "1人のユーザーは複数の投稿を持つ"
+docker compose up -d --build
 ```
+
+## API ドキュメント
+
+- Swagger UI: http://localhost:8000/docs
+
+## テスト
+
+```
+docker compose exec api poetry run pytest .
+```
+
+## UML/ER 図
+
+- ER 図: `docs/er-diagram.md`
