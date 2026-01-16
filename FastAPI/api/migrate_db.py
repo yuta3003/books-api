@@ -14,10 +14,10 @@ def reset_database():
     api.models.modelに定義されているテーブルを再作成します。
 
     Args:
-        null
+        なし
 
     Returns:
-        null
+        なし
     """
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)

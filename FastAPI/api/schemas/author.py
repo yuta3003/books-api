@@ -1,18 +1,18 @@
 """
-Author Models Module.
+著者スキーマモジュール。
 
-This module defines Pydantic models for representing author-related data structures.
+著者関連のデータ構造を表す Pydantic モデルを定義する。
 
-Classes:
-    - AuthorBase: Base model for author data.
-    - AuthorCreate: Model for creating an author.
-    - AuthorResponse: Model representing the response for author data.
+クラス:
+    - AuthorBase: 著者データの基底モデル
+    - AuthorCreate: 著者作成用モデル
+    - AuthorResponse: 著者レスポンス用モデル
 
-Usage:
-    - Import the required model classes.
-    - Use these models for validating and handling author-related data.
+利用方法:
+    - 必要なモデルクラスをインポートする
+    - 著者データの検証や取り扱いに利用する
 
-Example:
+例:
     from author import AuthorCreate, AuthorResponse
 
     author_data = {"name": "太宰治"}
@@ -23,7 +23,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class AuthorBase(BaseModel):
     """
-    Base model for author data.
+    著者データの基底モデル。
     """
 
     name: str = Field(..., min_length=1, max_length=50, description="著者名 (最大50文字)")
@@ -39,7 +39,7 @@ class AuthorBase(BaseModel):
 
 class AuthorCreate(AuthorBase):
     """
-    Model for creating an author.
+    著者作成用モデル。
     """
 
     model_config = {
@@ -55,7 +55,7 @@ class AuthorCreate(AuthorBase):
 
 class AuthorResponse(AuthorBase):
     """
-    Model representing the response for author data.
+    著者レスポンス用モデル。
     """
 
     id: str = Field(..., description="著者ID (UUID)")

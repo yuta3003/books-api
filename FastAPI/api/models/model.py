@@ -21,7 +21,7 @@ class Author(Base):
     """
     著者情報を表すデータベーステーブルのモデルクラスです。
 
-    Attributes:
+    属性:
         id (str): 著者の一意の識別子 (UUID)。
         name (str): 著者名 (最大50文字)。
         books (relationship): 著者が執筆した書籍との関連性。
@@ -39,7 +39,7 @@ class Book(Base):
     """
     書籍情報を表すデータベーステーブルのモデルクラスです。
 
-    Attributes:
+    属性:
         id (str): 書籍の一意の識別子 (UUID)。
         title (str): 書籍タイトル (最大100文字)。
         author_id (str): 著者の識別子 (UUID)。

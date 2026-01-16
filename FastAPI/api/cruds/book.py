@@ -1,35 +1,35 @@
 """
-Book CRUD Operations Module.
+書籍 CRUD 操作モジュール。
 
-This module provides functions for performing CRUD (Create, Read, Delete) operations on the 'books' table.
+このモジュールは、books テーブルに対する CRUD (作成・取得・削除) 操作を提供する。
 
-Functions:
-    - create_book: Create a new book in the database.
-    - get_books: Retrieve a list of all books from the database.
-    - get_book_by_id: Retrieve a book by its ID from the database.
-    - delete_book: Delete an existing book from the database.
+関数:
+    - create_book: 書籍を作成する
+    - get_books: 書籍一覧を取得する
+    - get_book_by_id: ID で書籍を取得する
+    - delete_book: 書籍を削除する
 
-Usage:
-    - Import the functions as needed.
-    - Use these functions to interact with the 'books' table in the database.
+利用方法:
+    - 必要な関数をインポートする
+    - books テーブルの操作に利用する
 
-Example:
+例:
     from api.cruds.book import create_book, get_books, get_book_by_id, delete_book
     from api.schemas.book import BookCreate
     from sqlalchemy.ext.asyncio import AsyncSession
 
     async with AsyncSession() as session:
-        # Create a new book
+        # 書籍を作成する
         new_book_data = BookCreate(title="人間失格", author_id="550e8400-e29b-41d4-a716-446655440000")
         created_book = await create_book(session, book_create=new_book_data)
 
-        # Get all books
+        # 書籍一覧を取得する
         books_list = await get_books(session)
 
-        # Get book by ID
+        # ID で書籍を取得する
         book_by_id = await get_book_by_id(session, book_id=created_book.id)
 
-        # Delete book
+        # 書籍を削除する
         await delete_book(session, original=book_by_id)
 """
 from typing import List, Optional, Tuple
@@ -48,17 +48,17 @@ async def create_book(
     db: AsyncSession, book_create: book_schema.BookCreate
 ) -> model.Book:
     """
-    Create a new book in the database.
+    書籍を DB に作成する。
 
     Args:
-        db (AsyncSession): AsyncSQLAlchemy session.
-        book_create (book_schema.BookCreate): Book data for creation.
+        db (AsyncSession): 非同期 SQLAlchemy セッション
+        book_create (book_schema.BookCreate): 書籍作成データ
 
     Returns:
-        model.Book: Created book data.
+        model.Book: 作成された書籍データ
 
     Raises:
-        IntegrityViolationError: If database integrity constraint is violated (e.g., invalid author_id).
+        IntegrityViolationError: DB の整合性制約に違反した場合 (例: author_id 不正)
     """
     try:
         book = model.Book(**book_create.model_dump())
@@ -73,13 +73,13 @@ async def create_book(
 
 async def get_books(db: AsyncSession) -> List[model.Book]:
     """
-    Retrieve a list of all books from the database.
+    書籍一覧を DB から取得する。
 
     Args:
-        db (AsyncSession): AsyncSQLAlchemy session.
+        db (AsyncSession): 非同期 SQLAlchemy セッション
 
     Returns:
-        List[model.Book]: List of all books.
+        List[model.Book]: 書籍一覧
     """
     result: Result = await db.execute(
         select(model.Book).order_by(model.Book.title)
@@ -89,14 +89,14 @@ async def get_books(db: AsyncSession) -> List[model.Book]:
 
 async def get_book_by_id(db: AsyncSession, book_id: str) -> Optional[model.Book]:
     """
-    Retrieve a book by its ID from the database.
+    ID で書籍を DB から取得する。
 
     Args:
-        db (AsyncSession): AsyncSQLAlchemy session.
-        book_id (str): ID of the book to retrieve (UUID).
+        db (AsyncSession): 非同期 SQLAlchemy セッション
+        book_id (str): 取得する書籍 ID (UUID)
 
     Returns:
-        Optional[model.Book]: Book data if found, otherwise None.
+        Optional[model.Book]: 書籍データ (未検出なら None)
     """
     result: Result = await db.execute(
         select(model.Book).filter(model.Book.id == book_id)
@@ -107,14 +107,14 @@ async def get_book_by_id(db: AsyncSession, book_id: str) -> Optional[model.Book]
 
 async def delete_book(db: AsyncSession, original: model.Book) -> None:
     """
-    Delete an existing book from the database.
+    書籍を DB から削除する。
 
     Args:
-        db (AsyncSession): AsyncSQLAlchemy session.
-        original (model.Book): Book data to be deleted.
+        db (AsyncSession): 非同期 SQLAlchemy セッション
+        original (model.Book): 削除対象の書籍データ
 
     Returns:
-        None
+        なし
     """
     await db.delete(original)
     await db.commit()

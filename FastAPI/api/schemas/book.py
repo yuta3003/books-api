@@ -1,18 +1,18 @@
 """
-Book Models Module.
+書籍スキーマモジュール。
 
-This module defines Pydantic models for representing book-related data structures.
+書籍関連のデータ構造を表す Pydantic モデルを定義する。
 
-Classes:
-    - BookBase: Base model for book data.
-    - BookCreate: Model for creating a book.
-    - BookResponse: Model representing the response for book data.
+クラス:
+    - BookBase: 書籍データの基底モデル
+    - BookCreate: 書籍作成用モデル
+    - BookResponse: 書籍レスポンス用モデル
 
-Usage:
-    - Import the required model classes.
-    - Use these models for validating and handling book-related data.
+利用方法:
+    - 必要なモデルクラスをインポートする
+    - 書籍データの検証や取り扱いに利用する
 
-Example:
+例:
     from book import BookCreate, BookResponse
 
     book_data = {"title": "人間失格", "author_id": "550e8400-e29b-41d4-a716-446655440000"}
@@ -23,7 +23,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class BookBase(BaseModel):
     """
-    Base model for book data.
+    書籍データの基底モデル。
     """
 
     title: str = Field(..., min_length=1, max_length=100, description="書籍タイトル (最大100文字)")
@@ -40,7 +40,7 @@ class BookBase(BaseModel):
 
 class BookCreate(BookBase):
     """
-    Model for creating a book.
+    書籍作成用モデル。
     """
 
     model_config = {
@@ -57,7 +57,7 @@ class BookCreate(BookBase):
 
 class BookResponse(BookBase):
     """
-    Model representing the response for book data.
+    書籍レスポンス用モデル。
     """
 
     id: str = Field(..., description="書籍ID (UUID)")

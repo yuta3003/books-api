@@ -1,7 +1,7 @@
 """
-Main FastAPI application module.
+FastAPI アプリケーションのエントリポイント。
 
-This module sets up a FastAPI application and includes routers for author and book.
+著者と書籍のルーターを登録してアプリケーションを構成する。
 """
 
 from fastapi import FastAPI

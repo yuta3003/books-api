@@ -1,27 +1,27 @@
 """
-Author CRUD Operations Module.
+著者 CRUD 操作モジュール。
 
-This module defines asynchronous CRUD (Create, Read) operations
-for the 'authors' table in the database.
+このモジュールは、DB の authors テーブルに対する
+非同期 CRUD (作成・取得) 操作を提供する。
 
-Functions:
-    - create_author: Create a new author in the database.
-    - get_authors: Retrieve a list of all authors from the database.
+関数:
+    - create_author: 著者を作成する
+    - get_authors: 著者一覧を取得する
 
-Usage:
-    - Import the functions and use them to interact with the 'authors' table.
+利用方法:
+    - これらの関数をインポートして authors テーブルを操作する
 
-Example:
+例:
     from api.cruds.author import create_author, get_authors
     from api.schemas.author import AuthorCreate
     from api.db import get_db
 
     async with get_db() as db:
-        # Create a new author
+        # 著者を作成する
         new_author = AuthorCreate(name="太宰治")
         created_author = await create_author(db, author_create=new_author)
 
-        # Get all authors
+        # 著者一覧を取得する
         authors_list = await get_authors(db)
 """
 from typing import List
@@ -40,17 +40,17 @@ async def create_author(
     db: AsyncSession, author_create: author_schema.AuthorCreate
 ) -> model.Author:
     """
-    Create a new author in the database.
+    著者を DB に作成する。
 
     Args:
-        db (AsyncSession): AsyncSQLAlchemy session.
-        author_create (author_schema.AuthorCreate): Author creation data.
+        db (AsyncSession): 非同期 SQLAlchemy セッション
+        author_create (author_schema.AuthorCreate): 著者作成データ
 
     Returns:
-        model.Author: Created author data.
+        model.Author: 作成された著者データ
 
     Raises:
-        IntegrityViolationError: If database integrity constraint is violated.
+        IntegrityViolationError: DB の整合性制約に違反した場合
     """
     try:
         author = model.Author(**author_create.model_dump())
@@ -65,13 +65,13 @@ async def create_author(
 
 async def get_authors(db: AsyncSession) -> List[model.Author]:
     """
-    Retrieve a list of all authors from the database.
+    著者一覧を DB から取得する。
 
     Args:
-        db (AsyncSession): AsyncSQLAlchemy session.
+        db (AsyncSession): 非同期 SQLAlchemy セッション
 
     Returns:
-        List[model.Author]: List of all authors.
+        List[model.Author]: 著者一覧
     """
     result: Result = await db.execute(
         select(model.Author).order_by(model.Author.name)

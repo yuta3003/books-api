@@ -1,23 +1,19 @@
 """
-Asynchronous Database Module.
+非同期データベースモジュール。
 
-This module provides functionality for working with an asynchronous database
-using SQLAlchemy's async capabilities.
-It includes an asynchronous engine, session creation, and a function
-to get an asynchronous database session.
+SQLAlchemy の非同期機能を使って DB 接続を管理する。
+非同期エンジンとセッションの生成、および DB セッション取得用の関数を提供する。
 
-Usage:
-    - Import the 'async_engine', 'async_session', and 'Base' objects.
-    - Use the 'get_db' coroutine function to obtain an asynchronous database session.
+利用方法:
+    - async_engine / async_session / Base をインポートする
+    - get_db コルーチンで非同期セッションを取得する
 
-Example:
+例:
     async with get_db() as session:
-        # Perform database operations using the 'session' object
+        # session を使って DB 操作を行う
 
-Note:
-    Make sure to update the 'ASYNC_DB_URL' variable
-    with the appropriate asynchronous database connection URL.
-
+注意:
+    ASYNC_DB_URL は接続先に合わせて更新すること
 """
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
@@ -34,15 +30,15 @@ Base = declarative_base()
 
 async def get_db():
     """
-    Coroutine function to get an asynchronous database session.
+    非同期データベースセッションを取得するコルーチン。
 
-    Usage:
-        Use 'async with get_db() as session:' to obtain an asynchronous database session.
-        Perform database operations using the 'session' object within the asynchronous context.
+    利用方法:
+        async with get_db() as session: でセッションを取得し、
+        非同期コンテキスト内で session を使って DB 操作を行う。
 
-    Example:
+    例:
         async with get_db() as session:
-            # Perform database operations using the 'session' object
+            # session を使って DB 操作を行う
     """
     async with async_session() as session:
         yield session
